@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>rE-Learn</title>
+	<link rel="stylesheet" type="text/css" href="../static/login/css/style.css">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<!-- Sweet alert Js -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="/../static/login/img/favicon.ico" />
+</head>
+<body>
+	<img class="wave" src="../static/login/img/wave.png">
+	<div class="container">
+		<div class="img">
+			<img src="../static/login/img/bg.svg">
+		</div>
+		<div class="login-content">
+			<form action="{{url_for('mailer')}}" method="post">
+				<img src="../static/login/img/avatar.svg">
+				<h3 class="title">Forgot password</h3>
+				<!-- Begin alerts -->                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <script>
+
+                    Swal.fire({
+
+                        title:"{{ category.title() }}!",
+                        // success , error , warning ,info
+
+                        text: "{{ message }}",
+                        // Custom message flashed from your flask routes
+
+                        icon: "{{ category }}" == "danger" ? "error" : "{{ category }}"
+                        // success , error , warning ,info
+
+                    })
+
+                </script>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <!-- End alerts -->
+           		<div class="input-div one" style="margin-top: 1rem;margin-bottom:0">
+           		   <div class="i">
+           		   		<i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">
+           		   		<h5>Email</h5>
+           		   		<input type="email" class="input" name="email" required>
+           		   </div>
+				</div>
+					  <a href="{{url_for('register')}}">Not a user?</a>
+					  <a href="{{url_for('login')}}">Login</a>
+				
+				
+			 	<input type="submit" class="btn" value="Retrieve my password">
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" src="../static/login/js/main.js"></script>
+</body>
+</html>

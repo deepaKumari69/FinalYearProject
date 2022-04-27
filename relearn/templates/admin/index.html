@@ -1,0 +1,50 @@
+{% extends 'admin/skeleton.html' %}
+{% block title %} Homepage {% endblock %}
+{% block body %} 
+   
+<div class="container">
+   <div class="row">
+      <div class="col-8">
+         <h2>Quizes</h2>
+      </div>
+      <div class="col-3">
+         <a href="{{url_for('add')}}" class="btn btn-primary">Add quiz</a>
+      </div>
+   </div>
+   <div class="card mt-3">
+      <div class="card-body">
+         <table  class="table table-responsive ">
+            <tr>
+               <th>Id</th>
+               <th>Question</th>
+               <th>Options</th>
+               <th>Correct</th>
+               <th>Image</th>
+               <th>Course</th>
+               <th>Level</th>
+               <th>Actions</th>
+            </tr>
+            
+            {% for id in msg %}
+            <tr>
+               {% for data in id %}
+               
+                  {% if data == "course_id" %}
+                     <td class="text-wrap">{{ "Marathi" if (id[data] == 1) else "Bengali"}} </td>
+                  {% elif data == "image" %}
+                     <td class="text-wrap"> <img src ='../static/assets/images/quizes/{{id[data]}}' height="50rem"/></td>
+                  {% else   %}
+                        <td class="text-wrap">{{id[data]}}</td>
+                  {% endif %}
+               {% endfor %}
+               <td>
+                  <a href="qdelete/{{id['id']}}" class="btn btn-danger">Delete</a>
+               </td>
+            </tr>
+            {% endfor %}
+         </table>
+      </div>
+    </div>
+</div>
+
+{% endblock %}

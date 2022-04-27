@@ -1,0 +1,233 @@
+{%extends 'header.html'%}
+{%block title%}
+Login | Relearn
+{%endblock %}
+{%block body%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+ <!-- Sweet alert Js -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="col-9">
+                      
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+           {% for message in messages %}
+           <div class="alert {{'alert-danger' if 'Wrong' in message else 'alert-success' }} alert-dismissible fade pb-2 show my-1 w-50" style="position:absolute;z-index:10" role="alert">
+            <strong class="d-flex align-items-center justify-content-center ">{{message}}
+
+                
+                <form method="POST" action="{{ url_for('move') }}" class="mx-5">
+                    
+                    <input type="hidden" name="level" value="{{level}}">
+                    <input type="hidden" name="course_id" value="{{id}}">
+                    <input type="hidden" name="no" value="{{no}}">
+                    
+                    <button type="submit" style="background: #FF743D;" class="btn  text-white">
+                        Proceed to next question
+                    </button>
+                </form> 
+            </strong> 
+            <p class="text-right w-100 mb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </p>
+            </div>
+           {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      
+            </div>
+
+<style>
+    .shadow-box{
+        border-radius:25px;
+        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.27);
+    }
+    .bg-main{
+        background: #00909E24;
+        
+    }
+</style>
+<body onload="pencil()">
+    <div id="can" class="container">
+        <div class="row ">
+            <div class="col-3">
+                <span class="display-6 pb-0 mb-0 text-center fw-bolder">Practice </span>
+            </div>
+            
+        </div>
+
+        <div class="row ">
+            <div class="col-6 offset-2">
+                <span class="fs-1 pb-0 mb-3 text-center d-flex">Q{{no+1}}) &nbsp; <audio src="../static/assets/audios/{{msg[no]['file']}}" controls ></span>
+            </div>
+            <div class="col-3 ">
+                <span class="text-center mt-3">
+                    <button class="btn fw-bold text-white w-25 mx-3" style="background: #FF743D;"onclick="reset()">Reset</button> 
+                </span>   
+            </div>
+            
+        </div>
+        <div class="row pt-2">
+            <div class="d-flex justify-content-center">
+                <canvas id="paint" width="750" height="300" style="border: 1px solid black; box-shadow:2px 2px 2px 2px black; border-radius:10px; background-color:white"  ></canvas>
+            </div>
+            
+            <div class="col-12 text-center mt-3">
+                <form id="save_form" method="POST" action="{{ url_for('save_image') }}">
+                    <input type="hidden" name="url" id="url" />
+                    <input type="hidden" name="level" value="{{level}}">
+                    <input type="hidden" name="course_id" value="{{id}}">
+                    <input type="hidden" name="no" value="{{no}}">
+                    <input type="hidden" name="image_url" id="image_url" />                               
+                    <button type="submit" id="download" class="btn fw-bold text-white w-25 mx-3" style="background: #FF743D;"  >Predict</button>
+                </form>
+                <img id="img_2" />
+                <!-- <button class="btn fw-bold text-white w-25 mx-3" style="background: #FF743D;"   onclick="save()">Save</button> -->
+            </div>
+        </div>
+    </div>
+
+   
+<script>
+    var canvas = document.getElementById("paint");
+    var ctx = canvas.getContext("2d");
+    var width = canvas.width;
+    var height = canvas.height;
+    ctx.fillStyle="black";
+    ctx.fillRect(0,0, width,height);
+    ctx.strokeStyle="white";
+    var curX, curY, prevX, prevY;
+    var hold = false;
+    ctx.lineWidth = 20;
+    var fill_value = true;
+    var stroke_value = false;
+                            
+    var canvas_data = {"pencil": []}
+
+        function draw(){
+            ctx.lineTo(curX, curY);
+            ctx.strokeStyle = "white";
+            ctx.fillStyle = "white";
+            ctx.stroke();
+            canvas_data.pencil.push({ "startx": prevX, "starty": prevY, "endx": curX, "endy": curY, "thick": ctx.lineWidth, "color": ctx.strokeStyle });
+        }    
+         
+        canvas.onmousemove = function(e){
+            if(hold){
+                curX = e.clientX - canvas.offsetLeft;
+                curY = e.clientY - canvas.offsetTop;
+                draw();
+            }
+        };
+            
+    function pencil(){
+        $('#can').show();
+        $('#form').hide();
+        
+        canvas.onmousedown = function(e){
+            curX = e.clientX - canvas.offsetLeft;
+            curY = e.clientY - canvas.offsetTop;
+            hold = true;
+                
+            prevX = curX;
+            prevY = curY;
+            ctx.beginPath();
+            ctx.moveTo(prevX, prevY);
+        };
+            
+        canvas.onmousemove = function(e){
+            if(hold){
+                curX = e.clientX - canvas.offsetLeft;
+                curY = e.clientY - canvas.offsetTop;
+                draw();
+            }
+        };
+            
+        canvas.onmouseup = function(e){
+            hold = false;
+        };
+            
+        canvas.onmouseout = function(e){
+            hold = false;
+        };
+            
+        function draw(){
+            ctx.lineTo(curX, curY);
+            ctx.stroke();
+            canvas_data.pencil.push({ "startx": prevX, "starty": prevY, "endx": curX, "endy": curY, "thick": ctx.lineWidth, "color": ctx.strokeStyle });
+        }
+    }
+    function reset(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle="black";
+        ctx.fillRect(0,0, width,height);
+        ctx.strokeStyle="white";
+        canvas_data = { "pencil": [], "line": [], "rectangle": [], "circle": [], "eraser": [] }
+    }
+        
+    function save(){
+        var filename = "input.jpg";
+        var data = JSON.stringify(canvas_data);
+        var image = canvas.toDataURL('image/jpg', 0.5);
+        var image = dataURItoBlob(image);
+        
+        $('#iname').attr("src",image);
+        $('#image').attr('value',image);
+        console.log(image);
+        $('#can').toggle();
+        $('#form').toggle();
+        
+       
+    } 
+    function dataURItoBlob(dataURI) {
+        // convert base64/URLEncoded data component to raw binary data held in a string
+        var byteString;
+        if (dataURI.split(',')[0].indexOf('base64') >= 0)
+            byteString = atob(dataURI.split(',')[1]);
+        else
+            byteString = unescape(dataURI.split(',')[1]);
+    
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    
+        // write the bytes of the string to a typed array
+        var ia = new Uint8Array(byteString.length);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+    
+        return new Blob([ia], {type:mimeString});
+    }
+    
+    download_img = function(el) {
+        var image = canvas.toDataURL("image/jpg");
+        console.log(dataURItoBlob(image));
+        el.href = image;
+    };
+   $('#image').change(()=>{
+       name = $("#image").val();
+       let result = name.includes("input-{{session['id']}}.jpg");
+        if(!result){
+            alert("Please Use the canvas image only!");
+        }       
+        else document.getElementById('predict').toggleAttribute('disabled');
+   })
+    
+   $('#download').click((e)=>{
+       e.preventDefault();
+       
+       var data = JSON.stringify(canvas_data);
+       var image = canvas.toDataURL('image/jpg', 0.5);
+       image = image.substring(22);
+       document.getElementById('image_url').value = image;
+       document.getElementById('save_form').submit();
+       //var image1 = dataURItoBlob(atob(image)); -->
+       //$('#img_2').attr('src',image);
+       
+       
+   });
+</script>
+
+</body>
+{%endblock %}

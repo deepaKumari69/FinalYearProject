@@ -1,0 +1,150 @@
+{% extends 'admin/skeleton.html' %}
+{% block title %} Homepage {% endblock %}
+{% block body %} 
+   
+<div class="container">
+   <div class="row">
+      <div class="col-8">
+         <h2>Manage Practice Questions </h2>
+         <!-- {% with messages = get_flashed_messages() %}
+            {% if messages %}
+               <ul>
+               {% for message in messages %}
+                  <li>{{ message }}</li>
+               {% endfor %}
+               </ul>
+            {% endif %}
+         {% endwith %} -->
+         <!-- Begin alerts -->                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <script>
+
+                    Swal.fire({
+
+                        title:"{{ category.title() }}!",
+                        // success , error , warning ,info
+
+                        text: "{{ message }}",
+                        // Custom message flashed from your flask routes
+
+                        icon: "{{ category }}" == "danger" ? "error" : "{{ category }}"
+                        // success , error , warning ,info
+
+                    })
+
+                </script>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <!-- End alerts -->
+      </div>
+      <div class="col-3">
+         <!-- Button trigger modal -->
+         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Add 
+         </button>
+       </div>   
+   </div>
+   <div class="card mt-3">
+      <div class="card-header">
+         {% if delete  %}
+            {{delete}}
+         {% endif %}
+      </div>
+      <div class="card-body">
+         {% if msg   %}
+         <table  class="table table-responsive ">
+            <tr>
+               <th>Id</th>
+               <th>Course Name</th>
+               <th>Level</th>
+               <th>Audio</th>
+               <th>Correct Value</th>
+               <th>Model</th>
+               <th>Actions</th>
+            </tr>
+            
+            {% for id in msg %}
+            <tr>
+               {% for data in id %}
+                  {% if data == "course" %}
+                     <td class="text-wrap">{{ "Marathi" if (id[data] == "1") else "Bengali"}} </td>
+                  {% elif data == "model" %}
+                     <td class="text-wrap">{{ 
+   "Consonant Model" if (id[data] == 0) else "Vowel Model" if (id[data] == 1) else "Bengali Model"
+                     }} </td>
+                  {% else   %}
+                     <td class="text-wrap">{{id[data]}}</td>
+                  {% endif %}
+               {% endfor %}
+               <td><a href="delete-practice/{{id['id']}}" class="btn btn-danger">Delete</a></td>
+            </tr>
+            {% endfor %}
+         </table>
+         {% else %}
+         <p>No lessons added</p>
+         {% endif %}
+      </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<form action="{{url_for('add_practice')}}" method="post" enctype = "multipart/form-data">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-scrollable">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalLabel">Add course</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         <div class="container">
+            <div class="row">
+                <div class="col-lg-12 mb-3">
+                    <label for="">Language</label>
+                    <select name="language" class="form-control">
+                        <option value="1">Marathi</option>
+                        <option value="2">Bengali</option>
+                    </select>
+                </div>
+                
+                <div class="col-lg-12 mb-3">
+                  <label for="">Level </label>
+                  <input type="number" class="form-control" min=1 max="7" name="level">
+              </div>
+                
+                <div class="col-lg-12 mb-3">
+                    <label for="">Correct Value</label>
+                    <input type="number" class="form-control" name="correct">
+                </div>
+                
+                <div class="col-lg-12 mb-4">
+                    <label for="">Upload Audio</label>
+                    <input type="file" class="form-control" name="audio">
+                </div>
+                <div class="col-lg-12 mb-3">
+                  <label for="">Modal to be use</label>
+                  <select name="model" class="form-control">
+                      <option value="0">Consonant model</option>
+                      <option value="1">Vowel Model</option>
+                      <option value="2">Bengali Model</option>
+                  </select>
+              </div>
+            </div>
+        </div>     
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         <button type="submit" class="btn btn-primary">Save changes</button>
+       </div>
+     </div>
+   </div>
+ </div>
+ </form>
+
+{% endblock %}

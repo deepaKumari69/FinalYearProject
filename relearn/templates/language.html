@@ -1,0 +1,64 @@
+{%extends 'header.html'%}
+{%block title%}
+Login | Relearn
+{%endblock %}
+{%block body%}
+<style>
+    .shadow-box{
+        border-radius:25px;
+        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.27);
+
+    }
+</style>
+<div class="container p-5 mt-5">
+    <div class="row">
+        
+    </div>
+    <div class="row">
+        <div class="col-4">
+             <form method="post" action="{{url_for('learn',no=0)}}" class="text-decoration-none text-black">
+                 <input type="hidden" name="level" value="{{level}}">
+                 <input type="hidden" name="course_id" value="{{id}}">
+                <button type="submit" style="z-index:-1; background:transparent" class="btn">
+                <div class="card shadow-box">
+                    <div class="card-body text-center">
+                        <img src="../../static/assets/images/learn.png" alt="" class="img-fluid">
+                        <h5 class="text-capitalize fw-bolder">learn</h5> 
+                        <p class="fw-bold">Lorem ipsum dolor sit amet consectetur, adipisicing elit. </p>
+                    </div>
+                </div>
+                </button>
+            </form>
+        </div>
+        <div class="col-4">
+            <form method="post" action="{{url_for('practice',no=0)}}" class="text-decoration-none text-black">
+                <input type="hidden" name="level" value="{{level}}">
+                <input type="hidden" name="course_id" value="{{id}}">
+                <button type="submit" style="z-index:-1; background:transparent" class="btn">
+                <div class="card shadow-box">
+                    <div class="card-body text-center">
+                        <img src="../../static/assets/images/practice.png" alt="" class="img-fluid">
+                        <h5 class="text-capitalize fw-bolder">practice</h5> 
+                        <p class="fw-bold">Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
+                    </div>
+                </div>
+                </button>
+            </form>
+            </div>
+        <div class="col-4">
+            <form method="post" action="{{url_for('quiz' , no=0)}}" class="text-decoration-none text-black">
+                <input type="hidden" name="level" value="{{level}}">
+                <input type="hidden" name="course_id" value="{{id}}">  <button type="submit" style="z-index:-1; background:transparent" class="btn">
+                    <div class="card shadow-box">
+                        <div class="card-body text-center">
+                            <img src="../../static/assets/images/quiz.png" alt="" class="img-fluid">
+                            <h5 class="text-capitalize fw-bolder">quiz</h5> 
+                            <p class="fw-bold">Lorem ipsum dolor sit amet consectetur, adipisicing elit. </p>
+                        </div>
+                    </div>
+                </div>
+            </button>
+            </form>
+    </div>
+</div>
+{%endblock %}

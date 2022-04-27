@@ -1,0 +1,108 @@
+{% extends 'admin/skeleton.html' %}
+{% block title %} Homepage {% endblock %}
+{% block body %} 
+      
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+         
+          <h2>Add Quizzes</h2>
+          <!-- {% with messages = get_flashed_messages() %}
+          {% if messages %}
+             {% for message in messages %}
+                <br>{{ message }}
+             {% endfor %}
+          {% endif %}
+       {% endwith %} -->
+
+        <!-- Begin alerts -->                
+               {% with messages = get_flashed_messages(with_categories=true) %}
+               {% if messages %}
+               {% for category, message in messages %}
+               <script>
+                  
+               Swal.fire({
+
+                      title:"{{ category.title() }}!",
+                      // success , error , warning ,info
+
+                      text: "{{ message }}",
+                      // Custom message flashed from your flask routes
+
+                      icon: "{{ category }}" == "danger" ? "error" : "{{ category }}"
+                      // success , error , warning ,info
+
+               })
+
+               </script>
+               {% endfor %}
+               {% endif %}
+               {% endwith %}
+
+    <!-- End alerts -->
+
+       </div>
+    </div>
+    <div class="card mt-3">
+       <div class="card-body">
+        <form action="{{url_for('add')}}" method="post" enctype = "multipart/form-data">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 mb-3">
+                        <label for="">Language</label>
+                        <select name="language" class="form-control">
+                            <option value="1">Marathi</option>
+                            <option value="2">Bengali</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <label for="">Question</label>
+                        <input type="text" class="form-control" name="question">
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <label for="">Option A </label>
+                        <input type="text" class="form-control" name="option">
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <label for="">Option B </label>
+                        <input type="text" class="form-control" name="option">
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <label for="">Option C </label>
+                        <input type="text" class="form-control" name="option">
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <label for="">Option D </label>
+                        <input type="text" class="form-control" name="option">
+                    </div>
+                    
+                    <div class="col-lg-12 mb-3">
+                        <label for="">Correct Option</label>
+                        <select name="correct" class="form-control">
+                            <option value="1">A</option>
+                            <option value="2">B</option>
+                            <option value="3">C</option>
+                            <option value="4">D</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <label for="">Level </label>
+                        <input type="number" class="form-control" min=1 max="7" name="level">
+                    </div>
+                    
+                    <div class="col-lg-12 mb-4">
+                        <label for="">Image</label>
+                        <input type="file" class="form-control" name="image">
+                    </div>
+                    
+                    <div class="col-lg-12 mb-3 text-center">
+                        <input type="submit" class="btn btn-primary w-50" name="add">
+                    </div>
+                </div>
+            </div>     
+        </form>
+       </div>
+     </div>
+ </div>
+ 
+{% endblock %}

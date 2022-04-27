@@ -1,0 +1,87 @@
+{% extends 'admin/skeleton.html' %}
+{% block title %} Homepage {% endblock %}
+{% block body %} 
+   
+<div class="container">
+   <div class="row">
+      <div class="col-8">
+         <h2>Manage Users</h2>
+         <!-- {% with messages = get_flashed_messages() %}
+            {% if messages %}
+               <ul>
+               {% for message in messages %}
+                  <li>{{ message }}</li>
+               {% endfor %}
+               </ul>
+            {% endif %}
+         {% endwith %} -->
+
+         <!-- Begin alerts -->                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <script>
+
+                    Swal.fire({
+
+                        title:"{{ category.title() }}!",
+                        // success , error , warning ,info
+
+                        text: "{{ message }}",
+                        // Custom message flashed from your flask routes
+
+                        icon: "{{ category }}" == "danger" ? "error" : "{{ category }}"
+                        // success , error , warning ,info
+
+                    })
+
+                </script>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <!-- End alerts -->
+      </div>
+    
+   </div>
+   <div class="card mt-3">
+      <div class="card-header">
+         {% if delete  %}
+            {{delete}}
+         {% endif %}
+      </div>
+      <div class="card-body">
+         <table  class="table table-responsive ">
+            <tr>
+               <th>Id</th>
+               <th>Name</th>
+               <th>Username</th>
+               <th>Email</th>
+               <th>Password</th>
+               <th>Role</th>
+               <th>Actions</th>
+            </tr>
+            
+            {% for id in msg %}
+            <tr>
+               {% for data in id %}
+                  {% if(data  == "role" ) %}
+                  {% if(id[data]  == 1 ) %}
+                  <td>User</td>
+                  {% else %}
+                  <td>Admin</td>
+                  {% endif %}
+                  {% else %}
+                  <td>{{id[data]}}</td>
+                  {% endif %}
+                  {% endfor %}
+                  <td><a href="delete/{{id['id']}}" class="btn btn-danger">Delete</a></td>
+            </tr>
+            {% endfor %}
+         </table>
+      </div>
+    </div>
+</div>
+
+
+{% endblock %}

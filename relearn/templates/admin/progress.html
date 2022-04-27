@@ -1,0 +1,55 @@
+{% extends 'admin/skeleton.html' %}
+{% block title %} Homepage {% endblock %}
+{% block body %} 
+   
+<div class="container">
+   <div class="row">
+      <div class="col-8">
+         <h2>Track Progress</h2>
+         {% with messages = get_flashed_messages() %}
+            {% if messages %}
+               <ul>
+               {% for message in messages %}
+                  <li>{{ message }}</li>
+               {% endfor %}
+               </ul>
+            {% endif %}
+         {% endwith %}
+      </div>
+    
+   </div>
+   <div class="card mt-3">
+      <div class="card-header">
+         {% if delete  %}
+            {{delete}}
+         {% endif %}
+      </div>
+      <div class="card-body">
+         <table  class="table table-responsive ">
+            <tr>
+               <th>Id</th>
+               <th>Username</th>
+               <th>Course</th>
+               <th>Level</th>
+            </tr>
+            
+            {% for id in msg %}
+            <tr>
+               {% for data in id %}
+                     {% if data == "level" %}
+                        <td>{{ 7 if id[data] >7  else   id[data]  }}</td>
+                  {% elif data == "course_id" %}
+                     <td>{{ "Marathi" if id[data] == 1 else "Bengali" }}</td>
+                  {% else %}
+                     <td>{{id[data]}}</td>
+                  {% endif %}
+               {% endfor %}
+            </tr>
+            {% endfor %}
+         </table>
+      </div>
+    </div>
+</div>
+
+
+{% endblock %}
